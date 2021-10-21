@@ -1,0 +1,74 @@
+21-10-2021 00:00:30.303 ERROR c.m.i.r.UserRepositoryCustom.findByUserName.50 - javax.persistence.NoResultException: No entity found for query
+21-10-2021 00:16:32.851 INFO  c.m.i.IdentityServiceApplication.logStarting.55 - Starting IdentityServiceApplication using Java 1.8.0_60 on DESKTOP-I2FCGVK with PID 23508 (G:\3.Mrd_java\0.Myproject\2.Microservice_Tools\identity-service\target\classes started by DaiPhongPC in G:\3.Mrd_java\0.Myproject\2.Microservice_Tools\identity-service)
+21-10-2021 00:16:32.854 INFO  c.m.i.IdentityServiceApplication.logStartupProfileInfo.659 - No active profile set, falling back to default profiles: default
+21-10-2021 00:16:37.115 ERROR o.s.b.d.LoggingFailureAnalysisReporter.report.40 - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field authenticationManager in com.mrd.identity.controller.AuthenController required a bean of type 'org.springframework.security.authentication.AuthenticationManager' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'org.springframework.security.authentication.AuthenticationManager' in your configuration.
+
+21-10-2021 00:20:37.633 INFO  c.m.i.IdentityServiceApplication.logStarting.55 - Starting IdentityServiceApplication using Java 1.8.0_60 on DESKTOP-I2FCGVK with PID 16812 (G:\3.Mrd_java\0.Myproject\2.Microservice_Tools\identity-service\target\classes started by DaiPhongPC in G:\3.Mrd_java\0.Myproject\2.Microservice_Tools\identity-service)
+21-10-2021 00:20:37.637 INFO  c.m.i.IdentityServiceApplication.logStartupProfileInfo.659 - No active profile set, falling back to default profiles: default
+21-10-2021 00:20:41.033 ERROR o.s.b.d.LoggingFailureAnalysisReporter.report.40 - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field authenticationManager in com.mrd.identity.controller.AuthenController required a bean of type 'org.springframework.security.authentication.AuthenticationManager' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'org.springframework.security.authentication.AuthenticationManager' in your configuration.
+
+21-10-2021 21:57:51.281 INFO  c.m.i.IdentityServiceApplication.logStarting.55 - Starting IdentityServiceApplication using Java 1.8.0_60 on DESKTOP-I2FCGVK with PID 20656 (G:\3.Mrd_java\0.Myproject\2.Microservice_Tools\identity-service\target\classes started by DaiPhongPC in G:\3.Mrd_java\0.Myproject\2.Microservice_Tools\identity-service)
+21-10-2021 21:57:51.316 INFO  c.m.i.IdentityServiceApplication.logStartupProfileInfo.659 - No active profile set, falling back to default profiles: default
+21-10-2021 21:57:55.089 ERROR o.s.b.d.LoggingFailureAnalysisReporter.report.40 - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field authenticationManager in com.mrd.identity.controller.AuthenController required a bean of type 'org.springframework.security.authentication.AuthenticationManager' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'org.springframework.security.authentication.AuthenticationManager' in your configuration.
+
+21-10-2021 22:03:20.133 INFO  c.m.i.IdentityServiceApplication.logStarting.55 - Starting IdentityServiceApplication using Java 1.8.0_60 on DESKTOP-I2FCGVK with PID 12404 (G:\3.Mrd_java\0.Myproject\2.Microservice_Tools\identity-service\target\classes started by DaiPhongPC in G:\3.Mrd_java\0.Myproject\2.Microservice_Tools\identity-service)
+21-10-2021 22:03:20.137 INFO  c.m.i.IdentityServiceApplication.logStartupProfileInfo.659 - No active profile set, falling back to default profiles: default
+21-10-2021 22:03:27.098 INFO  c.m.i.IdentityServiceApplication.logStarted.61 - Started IdentityServiceApplication in 7.865 seconds (JVM running for 9.802)
+21-10-2021 22:04:41.119 INFO  c.m.i.IdentityServiceApplication.logStarting.55 - Starting IdentityServiceApplication using Java 1.8.0_60 on DESKTOP-I2FCGVK with PID 14556 (G:\3.Mrd_java\0.Myproject\2.Microservice_Tools\identity-service\target\classes started by DaiPhongPC in G:\3.Mrd_java\0.Myproject\2.Microservice_Tools\identity-service)
+21-10-2021 22:04:41.123 INFO  c.m.i.IdentityServiceApplication.logStartupProfileInfo.659 - No active profile set, falling back to default profiles: default
+21-10-2021 22:04:47.690 INFO  c.m.i.IdentityServiceApplication.logStarted.61 - Started IdentityServiceApplication in 7.857 seconds (JVM running for 9.94)
+21-10-2021 22:04:51.462 INFO  c.m.i.service.impl.AuthServiceImpl.loadUserByUsername.36 - Find user with nghduc91 ==> uuid: 35cc910e-c374-4686-b8df-f8e7ae30e378
+21-10-2021 22:21:15.899 ERROR c.m.i.r.UserRepositoryCustom.findByEmail.63 - javax.persistence.NoResultException: No entity found for query
+21-10-2021 22:21:15.946 ERROR c.m.i.r.UserRepositoryCustom.findByMobile.78 - javax.persistence.NoResultException: No entity found for query
+21-10-2021 22:21:16.180 ERROR c.m.i.r.UserRepositoryCustom.findByUserName.48 - javax.persistence.NoResultException: No entity found for query
+21-10-2021 22:21:50.250 INFO  c.m.i.IdentityServiceApplication.logStarting.55 - Starting IdentityServiceApplication using Java 1.8.0_60 on DESKTOP-I2FCGVK with PID 20428 (G:\3.Mrd_java\0.Myproject\2.Microservice_Tools\identity-service\target\classes started by DaiPhongPC in G:\3.Mrd_java\0.Myproject\2.Microservice_Tools\identity-service)
+21-10-2021 22:21:50.254 INFO  c.m.i.IdentityServiceApplication.logStartupProfileInfo.659 - No active profile set, falling back to default profiles: default
+21-10-2021 22:21:58.446 INFO  c.m.i.IdentityServiceApplication.logStarted.61 - Started IdentityServiceApplication in 9.336 seconds (JVM running for 12.122)
