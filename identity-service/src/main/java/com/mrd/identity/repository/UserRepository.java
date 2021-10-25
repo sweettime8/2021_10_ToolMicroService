@@ -38,4 +38,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, String>
     @Modifying(clearAutomatically = true)
     @Query("UPDATE User u SET u.status = :status, u.modifyAt = now() WHERE u.uuid = :uuid ")
     int changeStatus(@Param("status") Integer status, @Param("uuid") String uuid);
+
+
 }

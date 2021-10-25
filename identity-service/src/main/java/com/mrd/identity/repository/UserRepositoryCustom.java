@@ -1,15 +1,18 @@
 package com.mrd.identity.repository;
 
 import com.mrd.identity.entity.User;
+import com.mrd.identity.entity.dto.UserSearchForm;
+import com.mrd.identity.utils.StringUtil;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.Query;
+import javax.persistence.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author ducnh
@@ -25,17 +28,47 @@ public class UserRepositoryCustom extends BaseRepository {
 
     public User findByUuid(String uuid) {
         Session session = openSession();
+        Object result = null;
         try {
-            User user = session.load(User.class, uuid);
-            return user;
-        } catch (EntityNotFoundException ex) {
+            Query query = session.createNativeQuery("SELECT * FROM user WHERE uuid = ?", User.class);
+            query.setParameter(1, uuid);
+            result = query.getSingleResult();
+        } catch (NoResultException ex) {
             LOGGER.error(ex.toString());
         } finally {
             closeSession(session);
         }
-        return null;
+        return result != null ? (User) result : null;
     }
 
+    public List<User> search(UserSearchForm data) {
+        List<User> userList = null;
+        TypedQuery<User> query = this.buildSearchQuery(data, User.class, false);
+        super.initPaging(query, data.getCurrentPage(), data.getRowsPerPage());
+        return query.getResultList();
+    }
+
+    private <T> TypedQuery<T> buildSearchQuery(final UserSearchForm data,
+                                               final Class<T> clazz, final boolean count) {
+        String baseQuery = "Select u from User u where u.isDelete = 0";
+        if (count) {
+            baseQuery = "Select count(u) from User u where u.isDelete = 0";
+        }
+        StringBuilder sql = new StringBuilder(baseQuery);
+        Map<String, Object> params = new HashMap<>();
+
+        if (!StringUtil.isNullOrEmpty(data.getKeyword())) {
+            sql.append("and o.username like(:keyword");
+            params.put("keyword", "%" + data.getKeyword() + "%");
+        }
+        return super.createQuery(sql.toString(), params, clazz);
+
+    }
+
+    public long count(UserSearchForm searchForm){
+        TypedQuery<Long> query = this.buildSearchQuery(searchForm,Long.class,true);
+        return query.getSingleResult();
+    }
 
     public User findByUserName(String username) {
         Session session = openSession();

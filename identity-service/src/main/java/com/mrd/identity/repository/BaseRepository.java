@@ -1,10 +1,12 @@
 package com.mrd.identity.repository;
 
+import com.mrd.identity.utils.StringUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.*;
+import java.util.Map;
 
 /**
  * @author ducnh
@@ -13,6 +15,13 @@ import javax.persistence.EntityManagerFactory;
 public class BaseRepository {
 
     protected SessionFactory sessionFactory;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
 
     protected BaseRepository(EntityManagerFactory factory) {
         if (factory.unwrap(SessionFactory.class) == null) {
@@ -32,5 +41,26 @@ public class BaseRepository {
             session.disconnect();
             session.close();
         }
+    }
+
+    public <T> TypedQuery<T> createQuery(final String sql,
+                                         final Map<String, Object> params,
+                                         final Class<T> clazz) {
+        TypedQuery<T> query = this.getEntityManager().createQuery(sql, clazz);
+        this.initQueryParams(query, params);
+        return query;
+    }
+
+    public void initQueryParams(final Query query,
+                                final Map<String, Object> params) {
+        if (!StringUtil.isNullOrEmpty(params.toString())) {
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                query.setParameter(entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
+    public void initPaging(final Query query, int pageNo, int pageSize){
+        query.setFirstResult((pageNo - 1) * pageSize).setMaxResults(pageSize);
     }
 }

@@ -8,7 +8,7 @@ spring:
     gateway:
       routes:
         - id: IDENTITY-SERVICE
-          uri: lb://IDENTITY-SERVICE
+          uri: http://localhost:9411/
           predicates:
             - Path=/identity/**
 #        - id: DEPARTMENT-SERVICE
@@ -24,3 +24,8 @@ eruka:
       defaultZone: http://localhost:8761/eureka/
   instance:
     hostname: localhost
+
+
+#LOGGING
+logging:
+  config: ${user.dir}/config/logback.xml

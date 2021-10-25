@@ -18,7 +18,9 @@ import javax.validation.constraints.Size;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements Comparable<User> , Serializable {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @NotNull
@@ -142,8 +144,4 @@ public class User implements Comparable<User> , Serializable {
 
     }
 
-    @Override
-    public int compareTo(User o) {
-        return this.getUsername().compareTo(o.getUsername());
-    }
 }

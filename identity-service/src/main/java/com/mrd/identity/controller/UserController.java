@@ -4,11 +4,14 @@ import com.mrd.identity.auth.CustomUserDetails;
 import com.mrd.identity.constant.Constant;
 import com.mrd.identity.entity.User;
 import com.mrd.identity.entity.dto.AuthorizationResponseDTO;
+import com.mrd.identity.entity.dto.UserDetailDTO;
+import com.mrd.identity.entity.dto.UserSearchForm;
 import com.mrd.identity.jwt.JwtTokenProvider;
 import com.mrd.identity.message.MessageContent;
 import com.mrd.identity.message.ResponseMessage;
 import com.mrd.identity.service.AuthService;
 import com.mrd.identity.service.UserService;
+import com.mrd.identity.utils.StringUtil;
 import com.mrd.identity.validate.UserValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +24,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -36,8 +37,8 @@ import java.util.UUID;
  * @author ducnh
  */
 @RestController
-@RequestMapping("/api/user")
-public class UserController extends BaseController{
+@RequestMapping("/identity/api/user")
+public class UserController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
@@ -52,18 +53,64 @@ public class UserController extends BaseController{
 //    @Autowired
 //    private AuthenticationManager authenticationManager;
 
+    @GetMapping("/search")
+    public ResponseMessage getAllUser(@RequestParam(value = "currentPage") int currentPage,
+                                      @RequestParam(value = "rowsPerPage") int rowsPerPage,
+                                      @RequestParam(value = "sort", required = false) String sort,
+
+                                      @RequestHeader Map<String, String> headerParam) {
+        ResponseMessage response = null;
+
+        AuthorizationResponseDTO dto = getAuthorFromToken(headerParam);
+        if (dto == null) {
+            response = new ResponseMessage(HttpStatus.FORBIDDEN.value(), Constant.VALIDATION_ACCOUNT_NOT_LOGIN,
+                    new MessageContent(null));
+        } else {
+
+            if (currentPage == 0 || rowsPerPage == 0) {
+                response = new ResponseMessage(HttpStatus.BAD_REQUEST.value(), Constant.VALIDATION_INVALID_PARAM_VALUE,
+                        new MessageContent(null));
+            } else {
+                if (!StringUtil.isNullOrEmpty(sort) && !"uuid".equalsIgnoreCase(sort)
+                        && !"email".equalsIgnoreCase(sort) && !"mobile".equalsIgnoreCase(sort)
+                        && !"fullName".equalsIgnoreCase(sort) && !"createdAt".equalsIgnoreCase(sort)) {
+                    response = new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Không có kiểu sort theo " + sort,
+                            new MessageContent(null));
+                } else {
+                    UserSearchForm searchForm = new UserSearchForm();
+                    searchForm.setSort(sort);
+                    searchForm.setCurrentPage(currentPage);
+                    searchForm.setRowsPerPage(rowsPerPage);
+                    List<User> userList = userService.search(searchForm);
+
+                    long total = userService.count(searchForm);
+
+                    if (userList == null) {
+                        response = new ResponseMessage(HttpStatus.OK.value(), HttpStatus.OK.toString(),
+                                new MessageContent(null, total));
+                    } else {
+                        total = userList.size();
+                        response = new ResponseMessage(HttpStatus.OK.value(), HttpStatus.OK.toString(),
+                                new MessageContent(userList, total));
+                    }
+                }
+            }
+
+        }
+        return response;
+    }
+
     @PostMapping
-    public ResponseMessage createUser(final @Valid @RequestBody Map<String, Object> bodyParam, Map<String, String> headerMap) {
+    public ResponseMessage createUser(final @Valid @RequestBody Map<String, Object> bodyParam, @RequestHeader Map<String, String> headerMap) {
         ResponseMessage response = null;
         if (bodyParam == null || bodyParam.isEmpty()) {
             response = new ResponseMessage(HttpStatus.BAD_REQUEST.value(), Constant.VALIDATION_INVALID_PARAM_VALUE,
-                    new MessageContent(HttpStatus.BAD_REQUEST.value(), Constant.VALIDATION_INVALID_PARAM_VALUE, null));
+                    new MessageContent(null));
         } else {
             AuthorizationResponseDTO dto = getAuthorFromToken(headerMap);
             if (dto == null) {
                 return new ResponseMessage(HttpStatus.FORBIDDEN.value(), "Bạn chưa đăng nhập",
-                        new MessageContent(HttpStatus.FORBIDDEN.value(), "Bạn chưa đăng nhập",
-                                null));
+                        new MessageContent(null));
             }
             String username = (String) bodyParam.get("username");
             String email = (String) bodyParam.get("email");
@@ -71,7 +118,7 @@ public class UserController extends BaseController{
             String fullName = (String) bodyParam.get("fullName");
             String password = (String) bodyParam.get("password");
             int status = 1;
-            int gender =  Integer.parseInt(bodyParam.get("gender").toString());
+            int gender = Integer.parseInt(bodyParam.get("gender").toString());
 
             String address = "";
             String avatar = "";
@@ -85,10 +132,10 @@ public class UserController extends BaseController{
             if (bodyParam.get("avatar") != null) {
                 avatar = (String) bodyParam.get("avatar");
             }
-            if(bodyParam.get("description") != null){
+            if (bodyParam.get("description") != null) {
                 description = (String) bodyParam.get("description");
             }
-            if(bodyParam.get("birthDay") != null){
+            if (bodyParam.get("birthDay") != null) {
                 birthDay = (String) bodyParam.get("birthDay");
             }
 
@@ -111,7 +158,7 @@ public class UserController extends BaseController{
 
             String invalidData = new UserValidation().validateInsertUser(user);
             if (invalidData != null) {
-                response = new ResponseMessage(HttpStatus.OK.value(), invalidData, new MessageContent(HttpStatus.OK.value(), invalidData, null));
+                response = new ResponseMessage(HttpStatus.OK.value(), invalidData, new MessageContent(null));
             } else {
                 User existUser = null;
                 //Check email exist
@@ -119,24 +166,21 @@ public class UserController extends BaseController{
                 if (existUser != null) {
                     invalidData = "Đã tồn tại user trên hệ thống ứng với email " + user.getEmail();
                     response = new ResponseMessage(HttpStatus.OK.value(), invalidData,
-                            new MessageContent(HttpStatus.OK.value(), invalidData,
-                                    null));
+                            new MessageContent(null));
                 } else {
                     //Check mobile exist
                     existUser = userService.findByMobile(user.getMobile());
                     if (existUser != null) {
                         invalidData = "Đã tồn tại user trên hệ thống ứng với mobile " + user.getMobile();
                         response = new ResponseMessage(HttpStatus.OK.value(), invalidData,
-                                new MessageContent(HttpStatus.OK.value(), invalidData,
-                                        null));
+                                new MessageContent(null));
                     } else {
                         //Check user_name exist
                         existUser = userService.findByUserName(user.getUsername());
                         if (existUser != null) {
                             invalidData = "Đã tồn tại user trên hệ thống ứng với user_name " + user.getUsername();
                             response = new ResponseMessage(HttpStatus.OK.value(), invalidData,
-                                    new MessageContent(HttpStatus.OK.value(), invalidData,
-                                            null));
+                                    new MessageContent(null));
                         } else {
                             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
                             user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -145,7 +189,7 @@ public class UserController extends BaseController{
                                 response = new ResponseMessage(HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase(), new MessageContent(user));
                             } catch (Exception ex) {
                                 response = new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                                        new MessageContent(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), ex.toString()));
+                                        new MessageContent(ex.toString()));
                             }
                             if (response != null && response.getStatus() == HttpStatus.CREATED.value()) {
 
@@ -186,6 +230,30 @@ public class UserController extends BaseController{
         }
         return response;
     }
+
+    @GetMapping("/{uuid}")
+    public ResponseMessage getDetailUser(@PathVariable String uuid, @RequestHeader Map<String, String> headerParam) {
+        ResponseMessage response;
+        AuthorizationResponseDTO dto = getAuthorFromToken(headerParam);
+        if (dto == null) {
+            response = new ResponseMessage(HttpStatus.FORBIDDEN.value(), Constant.VALIDATION_ACCOUNT_NOT_LOGIN,
+                    new MessageContent(null));
+        } else {
+            if (!StringUtil.isNumberic(uuid) && !StringUtil.isUUID(uuid)) {
+                response = new ResponseMessage(HttpStatus.BAD_REQUEST.value(), Constant.VALIDATION_INVALID_PARAM_VALUE, new MessageContent(null));
+            } else {
+                User user = userService.findByUuid(uuid);
+                if (user == null) {
+                    response = new ResponseMessage(HttpStatus.NOT_FOUND.value(), Constant.VALIDATION_DATA_NOT_FOUND, new MessageContent(null));
+                } else {
+                    UserDetailDTO detailDTO = new UserDetailDTO(user);
+                    response = new ResponseMessage(new MessageContent(detailDTO));
+                }
+            }
+        }
+        return response;
+    }
+
 
     private AuthorizationResponseDTO getAuthorFromToken(Map<String, String> headerParam) {
         if (headerParam == null || (!headerParam.containsKey("authorization")

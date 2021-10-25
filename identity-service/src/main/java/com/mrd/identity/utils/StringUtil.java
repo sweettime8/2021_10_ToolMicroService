@@ -1,6 +1,7 @@
 package com.mrd.identity.utils;
 
 import java.util.Arrays;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,6 +61,42 @@ public class StringUtil {
         }
 
         return false;
+    }
+
+    public static boolean isNumeric(String s) {
+        if (isNullOrEmpty(s)) {
+            return false;
+        }
+
+        return s.matches("[-+]?\\d*\\.?\\d+");
+    }
+
+    public static boolean isNumberic(String sNumber) {
+        if (sNumber == null || "".equals(sNumber)) {
+            return false;
+        }
+        char ch_max = (char) 0x39;
+        char ch_min = (char) 0x30;
+
+        for (int i = 0; i < sNumber.length(); i++) {
+            char ch = sNumber.charAt(i);
+            if ((ch < ch_min) || (ch > ch_max)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isUUID(String string) {
+        if (isNullOrEmpty(string)) {
+            return false;
+        }
+        try {
+            UUID.fromString(string);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
 }

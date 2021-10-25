@@ -28,7 +28,7 @@ import java.util.Map;
  * @author ducnh
  */
 @RestController
-@RequestMapping("/api/authen")
+@RequestMapping("/identity/api/authen")
 public class AuthenController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenController.class);
@@ -54,7 +54,7 @@ public class AuthenController {
         ResponseMessage response = null;
         if (bodyParam == null || bodyParam.isEmpty()) {
             response = new ResponseMessage(HttpStatus.BAD_REQUEST.value(), Constant.VALIDATION_INVALID_PARAM_VALUE,
-                    new MessageContent(HttpStatus.BAD_REQUEST.value(), Constant.VALIDATION_INVALID_PARAM_VALUE, null));
+                    new MessageContent(null));
         }else {
             String username = bodyParam.get("username").toString();
             String password = bodyParam.get("password").toString();
@@ -62,14 +62,14 @@ public class AuthenController {
             String invalidData = new UserValidation().validateLogin(username, password);
             if (invalidData != null) {
                 response = new ResponseMessage(HttpStatus.BAD_REQUEST.value(), invalidData,
-                        new MessageContent(HttpStatus.BAD_REQUEST.value(), invalidData, null));
+                        new MessageContent(null));
             }else {
                 // Check exist user with username
                 User existUser = userService.findByUserName(username);
                 if (existUser == null) {
                     invalidData = "username không tồn tại";
                     return new ResponseMessage(HttpStatus.NOT_FOUND.value(), invalidData,
-                            new MessageContent(HttpStatus.NOT_FOUND.value(), invalidData, null));
+                            new MessageContent(null));
                 }else{
                     // Xác thực thông tin người dùng Request lên, nếu không xảy ra exception tức là thông tin hợp lệ
                     Authentication authentication = null;
@@ -79,13 +79,13 @@ public class AuthenController {
                         LOGGER.error(ex.toString());
                         invalidData = "username hoặc mật khẩu không đúng";
                         return new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), invalidData,
-                                new MessageContent(HttpStatus.UNAUTHORIZED.value(), invalidData, null));
+                                new MessageContent(null));
                     }
 
                     // Set thông tin authentication vào Security Context
                     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
                     if (userDetails.getUser().getStatus() == User.STATUS_LOCK) {
-                        response = new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), Constant.VALIDATION_ACCOUNT_LOCKED, new MessageContent(HttpStatus.UNAUTHORIZED.value(), Constant.VALIDATION_ACCOUNT_LOCKED, null));
+                        response = new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), Constant.VALIDATION_ACCOUNT_LOCKED, new MessageContent(null));
                     }else {
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                         // Trả về jwt cho người dùng.
