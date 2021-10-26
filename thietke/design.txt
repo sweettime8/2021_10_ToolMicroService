@@ -1,0 +1,6 @@
+- cache-service 
+- gateway-service
+- eureka-service
+- identity-service
+- rbac-service
+- notify-service
