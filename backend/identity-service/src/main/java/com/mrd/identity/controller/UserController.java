@@ -79,9 +79,7 @@ public class UserController extends BaseController {
                 } else {
                     UserSearchForm searchForm = new UserSearchForm();
                     searchForm.setSort(sort);
-                    searchForm.setCurrentPage(currentPage);
-                    searchForm.setRowsPerPage(rowsPerPage);
-                    List<User> userList = userService.search(searchForm);
+                    List<User> userList = userService.search(searchForm , currentPage, rowsPerPage);
 
                     long total = userService.count(searchForm);
 
@@ -89,7 +87,6 @@ public class UserController extends BaseController {
                         response = new ResponseMessage(HttpStatus.OK.value(), HttpStatus.OK.toString(),
                                 new MessageContent(null, total));
                     } else {
-                        total = userList.size();
                         response = new ResponseMessage(HttpStatus.OK.value(), HttpStatus.OK.toString(),
                                 new MessageContent(userList, total));
                     }

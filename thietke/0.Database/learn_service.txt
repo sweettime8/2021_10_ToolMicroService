@@ -1,0 +1,37 @@
+CREATE TABLE quiz(
+       id int NOT NULL AUTO_INCREMENT,       				-- tự động tạo id tăng
+       quiz_type char(2),                    				-- Hình thức câu hỏi: M(4 dap an, chọn 1); N(nhiều DA, nhiều TL); D(điền đáp án)
+       content nvarchar(300),                				-- Nội dung câu hỏi
+       level char(1),                        				-- 3 độ khó, 1(dễ), 2(trung bình), 3(khó)
+       description varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+       created_by varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+       created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+       modify_by varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+       modify_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+       PRIMARY KEY (id)
+);
+
+create table answer(			     								-- bảng đáp án lưu thông tin đáp án
+       id int NOT NULL AUTO_INCREMENT,       						-- tự động tạo id tăng
+       quiz_id int,                          						-- Mã câu hỏi
+       content nvarchar(300),                						-- Nội dung đáp án
+       correct tinyint(1) DEFAULT NULL,      						-- Đáp án đúng hay sai: 0 sai, 1 đúng
+       description varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+	   created_by varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+       created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+       modify_by varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+       modify_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+       PRIMARY KEY (id)
+);
+
+create table result(			     									-- bảng kết quả thi
+       id int NOT NULL AUTO_INCREMENT,       							-- tự động tạo id tăng
+       user_id varchar(40),			     								-- id user
+       score float,			     										-- kết quả user
+       created_by varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+       created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+       modify_by varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+       modify_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+       PRIMARY KEY (id)
+);
+

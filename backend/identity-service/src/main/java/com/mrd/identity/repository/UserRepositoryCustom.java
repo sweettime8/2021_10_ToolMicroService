@@ -41,10 +41,10 @@ public class UserRepositoryCustom extends BaseRepository {
         return result != null ? (User) result : null;
     }
 
-    public List<User> search(UserSearchForm data) {
+    public List<User> search(UserSearchForm data, int currentPage, int rowPerPage) {
         List<User> userList = null;
         TypedQuery<User> query = this.buildSearchQuery(data, User.class, false);
-        super.initPaging(query, data.getCurrentPage(), data.getRowsPerPage());
+        super.initPaging(query, currentPage, rowPerPage);
         return query.getResultList();
     }
 

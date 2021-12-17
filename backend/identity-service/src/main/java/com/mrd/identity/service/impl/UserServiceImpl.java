@@ -35,8 +35,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> search(UserSearchForm searchForm) {
-        return userRepositoryCustom.search(searchForm);
+    public List<User> search(UserSearchForm searchForm, int currentPage, int rowPerPage) {
+        return userRepositoryCustom.search(searchForm, currentPage, rowPerPage);
     }
 
     @Override

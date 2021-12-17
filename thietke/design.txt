@@ -4,3 +4,7 @@
 - identity-service
 - rbac-service
 - notify-service
+- filemanager-service 
+
+- Elasticsearch Logstash Kibana
+- Distributed tracing với Spring Cloud Sleuth và Zipkin

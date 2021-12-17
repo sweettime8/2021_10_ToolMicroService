@@ -15,8 +15,6 @@ import lombok.Setter;
 public class UserSearchForm {
 
     private String sort;
-    private int currentPage;
-    private int rowsPerPage;
     private String keyword;
 
 }

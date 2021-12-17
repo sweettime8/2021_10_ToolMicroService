@@ -11,7 +11,7 @@ import java.util.List;
 public interface UserService {
     User findByUserName(String userName);
 
-    List<User> search(UserSearchForm searchForm);
+    List<User> search(UserSearchForm searchForm, int currentPage, int rowPerPage);
 
     User findByUuid(String uuid);
 

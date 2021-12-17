@@ -10,13 +10,18 @@ import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en'
 import VueCookies from 'vue-cookies'
 import * as CONFIG from "@/config/index"
+import VueI18n from 'vue-i18n';
+
+
+require("@/config/interceptor")
 
 Vue.config.performance = true
 Vue.use(CoreuiVue)
-Vue.use(ElementUI);
 Vue.use(ElementUI, { locale })
 Vue.prototype.$log = console.log.bind(console)
 Vue.use(VueCookies)
+Vue.use(VueI18n);
+
 
 router.beforeEach( (to, from, next) => {
   let check = false;

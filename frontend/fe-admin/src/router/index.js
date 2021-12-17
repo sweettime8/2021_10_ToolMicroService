@@ -55,7 +55,11 @@ const Register = () => import('@/views/pages/Register')
 
 // Users
 const Users = () => import('@/views/users/Users')
-const User = () => import('@/views/users/User')
+const UserDetail = () => import('@/views/users/UserDetail')
+
+//quiz
+const ManagerQuiz = () => import('@/views/quiz/ManagerQuiz')
+const Az900 = () => import('@/views/quiz/Az900')
 
 Vue.use(Router)
 
@@ -142,11 +146,34 @@ function configRoutes () {
               meta: {
                 label: 'User Details'
               },
-              name: 'User',
-              component: User
+              name: 'UserDetail',
+              component: UserDetail
             }
           ]
         },
+        {
+          path: '/quiz',
+          meta: {
+            label: 'quiz'
+          },
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            {
+              path: 'manager-quiz',
+              name: 'ManagerQuiz',
+              hidden: true,
+              component: ManagerQuiz
+            },
+            {
+              path: 'az900',
+              name: 'Az900',
+              hidden: true,
+              component: Az900
+            }
+          ]
+        },        
         {
           path: 'base',
           redirect: '/base/cards',
